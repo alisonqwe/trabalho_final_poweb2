@@ -2,7 +2,7 @@
 
 Todas as mudanças relevantes deste projeto são registradas aqui.
 
-## [0.1.0] - 2026-11-19 (Parcial 1)
+## [0.1.0] - 2026-11-20 (Parcial 1)
 
 ### Adicionado
 - Estrutura inicial do projeto em camadas: `app/` com `core`, `middlewares`,
