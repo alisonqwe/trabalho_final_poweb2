@@ -1,0 +1,31 @@
+# Cada item abaixo de "services" é um container.
+services:
+
+  # Nosso banco de dados.
+  banco:
+    # Imagem pronta do MySQL, com a versão fixada para não mudar sozinha.
+    image: mysql:8.4
+    container_name: academia_banco
+    restart: unless-stopped
+
+    # O MySQL lê estas variáveis na primeira vez que sobe e cria o banco
+    # e o usuário. Os valores vêm do arquivo .env (nada de senha aqui).
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    # "porta_do_seu_pc:porta_do_container". Usamos 3307 por fora porque o
+    # seu MariaDB local pode já estar ocupando a 3306.
+    ports:
+      - "3307:3306"
+
+    # Sem este volume, os dados sumiriam toda vez que o container fosse
+    # apagado. O volume é um "HD" separado que sobrevive ao container.
+    volumes:
+      - dados_banco:/var/lib/mysql
+
+# Declaração do volume usado acima.
+volumes:
+  dados_banco:
