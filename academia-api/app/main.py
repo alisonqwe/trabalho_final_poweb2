@@ -1,5 +1,6 @@
 # Importamos a classe principal do FastAPI.
 from fastapi import FastAPI
+from app.routers.auth import roteador_auth
 
 # Criamos a aplicação. Tudo na API vai "pendurar" neste objeto.
 # O título e a versão aparecem na documentação automática.
@@ -7,6 +8,8 @@ aplicacao = FastAPI(
     title="API da Academia",
     version="0.1.0",
 )
+
+aplicacao.include_router(roteador_auth)
 
 
 # A "etiqueta" @aplicacao.get diz: quando chegar um GET em /saude,

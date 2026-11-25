@@ -16,16 +16,16 @@ class Treino(Base):
 
     nome: Mapped[str] = mapped_column(String(100), nullable=False)
 
-    # Opcional. MEDIUMTEXT é o texto longo, como no diagrama.
+   
     descricao: Mapped[str | None] = mapped_column(MEDIUMTEXT, nullable=True)
 
-    # "iniciante", "intermediario" ou "avancado" (validado na API).
+  
     nivel: Mapped[str] = mapped_column(String(20), nullable=False)
 
-    # Opcional.
+
     duracao_minutos: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
-    # Preenchido pelo próprio banco no momento do cadastro.
+    
     criado_em: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), nullable=False
     )

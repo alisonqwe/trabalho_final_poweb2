@@ -12,11 +12,10 @@ class Treinador(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    # Opcional (nullable=True) e único (unique=True): pode ficar vazio, mas
-    # quando preenchido não pode repetir entre treinadores.
+    
     cref: Mapped[str | None] = mapped_column(String(20), unique=True, nullable=True)
 
-    # Opcional.
+   
     telefone: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # FK para usuarios, única e obrigatória (ligação 1:1 do diagrama).

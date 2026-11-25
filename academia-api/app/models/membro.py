@@ -14,13 +14,13 @@ class Membro(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    # Opcional: "| None" no tipo do Python e nullable=True no banco.
+   
     telefone: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
-    # Opcional: mesma regra do telefone.
+    
     data_nascimento: Mapped[date | None] = mapped_column(Date, nullable=True)
 
-    # Obrigatória: todo membro tem uma data de matrícula.
+
     data_matricula: Mapped[date] = mapped_column(Date, nullable=False)
 
     # Chave estrangeira: aponta para a tabela usuarios. O banco só aceita
