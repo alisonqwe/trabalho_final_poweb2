@@ -11,21 +11,36 @@ serão documentados conforme forem implementados.
 
 ## Como executar localmente
 
-Pré-requisito: Python 3 instalado.
+Pré-requisitos: Python 3, Docker e Docker Compose.
 
 ```bash
 # 1. Entrar na pasta da API
 cd academia-api
 
-# 2. Criar e ativar o ambiente virtual
+# 2. Criar o arquivo de configuração a partir do modelo
+cp .env.example .env
+```
+
+Abra o `.env` e troque os valores `troque_...` por senhas e por uma chave
+secreta de sua escolha (nunca versione esse arquivo). Para gerar uma chave
+aleatória: `python -c "import secrets; print(secrets.token_urlsafe(48))"`.
+
+```bash
+# 3. Subir o banco de dados (MySQL em container, porta 3307 do computador)
+docker compose up -d
+
+# 4. Criar e ativar o ambiente virtual
 python -m venv .venv
 source .venv/bin/activate        # Linux/macOS
 # .venv\Scripts\Activate.ps1     # Windows (PowerShell)
 
-# 3. Instalar as dependências
+# 5. Instalar as dependências
 pip install -r requirements.txt
 
-# 4. Subir o servidor
+# 6. Criar as tabelas (migrações do Alembic)
+alembic upgrade head
+
+# 7. Subir a API
 uvicorn app.main:aplicacao --reload
 ```
 
@@ -33,6 +48,9 @@ Com o servidor no ar:
 
 - Verificação de saúde: http://127.0.0.1:8000/saude
 - Documentação interativa: http://127.0.0.1:8000/docs
+
+Para desligar o banco: `docker compose down` (os dados são mantidos no
+volume; use `docker compose down -v` para apagá-los também).
 
 ## Estrutura do projeto
 
@@ -54,5 +72,5 @@ O diagrama do banco de dados está em `academia_api.mwb` (MySQL Workbench).
 
 ## Status
 
-Parcial 1: estrutura do projeto, rota `/saude` e modelagem do banco.
+Parcial 2: banco de dados com migrações, hash seguro de senhas e cadastro de membro.
 Veja o histórico completo em [CHANGELOG.MD](CHANGELOG.MD).
