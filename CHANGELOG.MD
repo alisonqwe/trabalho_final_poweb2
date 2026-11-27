@@ -22,10 +22,16 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
   rota): validação de entrada, e-mail normalizado, papel fixo `member`, criação
   de usuário e membro em uma única transação. Respostas 201, 409 (e-mail já
   cadastrado) e 422 (dados inválidos).
+- Login com token JWT (`POST /auth/login`): confere o hash Argon2, usa mensagem
+  única para e-mail inexistente e senha errada e assina o token com uma chave do
+  `.env`, com validade de 30 minutos. Respostas 200, 401 e 422.
+- Proteção de rotas por token (`app/core/dependencias.py`), com a rota
+  `GET /auth/eu` e a autorização por papel (`exigir_papel`), com respostas 401
+  (não autenticado) e 403 (sem permissão).
 - Evidências dos testes do cadastro na pasta `testes/`.
 
 ### Próximos passos
-- Login com token JWT e autorização por papel (member, trainer e admin).
+- Aplicar a autorização por papel nas rotas de membros, treinos e check-ins.
 - Cadastro e consulta de treinos e check-ins.
 - Pipeline de middlewares, tratamento padronizado de erros e logging.
 - Cache, load balancing com Docker Compose e mapeamento dos requisitos ASVS.

@@ -12,6 +12,11 @@ class Configuracoes(BaseSettings):
     MYSQL_DATABASE: str
     MYSQL_USER: str
     MYSQL_PASSWORD: str
+    CHAVE_SECRETA_JWT: str
+    EXPIRACAO_DO_TOKEN_MINUTOS: int = 30
+    ALGORITMO_JWT: str = "HS256"
+
+
 
     # Onde o banco está. Os valores abaixo são os padrões para rodar a API
     # no seu computador: o Docker abriu a porta 3307 para o banco.
