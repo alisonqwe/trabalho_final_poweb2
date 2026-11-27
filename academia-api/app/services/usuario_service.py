@@ -6,7 +6,12 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.seguranca import gerar_hash_da_senha
+from app.core.seguranca import (
+    criar_token_de_acesso,
+    gerar_hash_da_senha,
+    verificar_senha,
+)
+from app.schemas.auth import LoginEntrada
 from app.models.membro import Membro
 from app.models.usuario import Usuario
 from app.schemas.usuario import CadastroDeMembro
@@ -55,3 +60,31 @@ def cadastrar_membro(sessao: Session, dados: CadastroDeMembro) -> Usuario:
     sessao.refresh(novo_usuario)
 
     return novo_usuario
+
+
+
+class CredenciaisInvalidas(Exception):
+    # Erro de negócio: a rota vai transformá-lo em HTTP 401.
+    pass
+
+
+# Hash de uma senha qualquer, calculado uma vez só. Serve para gastar o mesmo
+# tempo de conferência quando o e-mail não existe (ver fazer_login).
+_HASH_FALSO = gerar_hash_da_senha("senha-que-ninguem-usa")
+
+
+def fazer_login(sessao: Session, dados: LoginEntrada) -> str:
+    usuario = sessao.scalar(
+        select(Usuario).where(Usuario.email == dados.email.lower())
+    )
+
+    # Se o usuário não existe, conferimos a senha contra o hash falso, só para
+    # a resposta demorar o mesmo tempo que demoraria com um usuário real.
+    hash_para_conferir = usuario.senha_hash if usuario else _HASH_FALSO
+    senha_confere = verificar_senha(dados.senha, hash_para_conferir)
+
+    # Um único erro para os dois casos (e-mail inexistente ou senha errada).
+    if usuario is None or not senha_confere:
+        raise CredenciaisInvalidas()
+
+    return criar_token_de_acesso(usuario.id, usuario.papel)
