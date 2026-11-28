@@ -3,6 +3,9 @@ from fastapi import FastAPI
 from app.routers.auth import roteador_auth
 from app.routers.treinos import roteador_treinos
 from app.routers.checkins import roteador_checkins
+from app.core.erros import registrar_tratadores_de_erro
+from app.core.logs import configurar_logs
+from app.middlewares.registro_de_requisicoes import registrar_requisicao
 
 # Criamos a aplicação. Tudo na API vai "pendurar" neste objeto.
 # O título e a versão aparecem na documentação automática.
@@ -14,6 +17,8 @@ aplicacao = FastAPI(
 aplicacao.include_router(roteador_auth)
 aplicacao.include_router(roteador_treinos)
 aplicacao.include_router(roteador_checkins)
+registrar_tratadores_de_erro(aplicacao)
+aplicacao.middleware("http")(registrar_requisicao)
 
 
 # A "etiqueta" @aplicacao.get diz: quando chegar um GET em /saude,
